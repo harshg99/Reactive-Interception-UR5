@@ -13,6 +13,9 @@
 
 #include <stdio.h>
 #define TCP_NODELAY 1
+
+
+//node for sending interception pose information to the UR5
 class tcpSocket
 {
    struct sockaddr_in server;

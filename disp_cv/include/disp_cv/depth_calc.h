@@ -82,6 +82,8 @@ class depth{
 
       // Update GUI Window
     }
+
+    //routine to display marker messages on Rviz to visualise where the ball is
     void boxCallBack(const disp_cv::multibox::ConstPtr &msg){
 
       //POint cloud computations
@@ -107,6 +109,8 @@ class depth{
        points_viz.header.stamp=ros::Time::now();
        points_viz.header.frame_id="camera_rgb_optical_frame";
       for(int i=0;i<msg->boxes.size();i++){
+
+        /* Code for Future references
      //   line_Strip[i].id=i;
         //line_Strip[i].type=visualization_msgs::Marker::LINE_STRIP;
       //  line_Strip[i].scale.x=2.0;
@@ -114,7 +118,7 @@ class depth{
     //   line_Strip[i].header.stamp=ros::Time::now();
     //    line_Strip[i].header.frame_id="camera_rgb_optical_frame";
 
-/*
+
         for(int j=0;j<4;j++){
           pcl::PointXYZ temp_point=pointcloud.at(points[i][j].x,points[i][j].y);
           geometry_msgs::Point p;
@@ -133,8 +137,11 @@ class depth{
           }
           line_Strip[i].points.push_back(p);
         }
-        */
+
         //pcl::PointXYZ temp_point=pointcloud.at((int)(msg->boxes[i].x+msg->boxes[i].w/2),(int)((msg->boxes[i].y+msg->boxes[i].h)/2));
+
+        */
+
         if(!msg->boxes.empty()){
           geometry_msgs::Point p=calc_dist(msg->boxes[i]);
           points_viz.points.push_back(p);
@@ -180,12 +187,14 @@ class depth{
       return box;
     }
 
+    //publishes modified point cloud for Rviz
     void PCCallBack(const PC::ConstPtr &msg ){
       pointcloud=*msg;
       pointCloudPublisher.publish(pointcloud);
     }
 
-
+    //uses depth first search to identify the nearest 20 valid points within nthe bounding boxes as detected by
+    //opencv in the point cloud to evaluate the distance of the object from the camera
     geometry_msgs::Point calc_dist(disp_cv::box box){
       geometry_msgs::Point p;
       p.x=0.0;p.y=0.0;p.z=0.0;

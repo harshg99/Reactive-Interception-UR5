@@ -53,7 +53,7 @@ int main(int argc, char **argv)
       }
       send_val=false;
     }
-     printf("Sent\n");
+    // printf("Sent\n");
      ros::spinOnce();
      rate.sleep();
   }

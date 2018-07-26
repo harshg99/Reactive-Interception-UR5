@@ -23,7 +23,7 @@ using namespace std;
 static const string OPENCV_WINDOW = "Image window";
 
 
-
+//class to detect the ball; both gpu and cpu based detections included
 class detect
     {
         private:
@@ -58,6 +58,7 @@ class detect
 
                 disp_boxes(frame);
             }
+
             void find_object_gpu(cv::Mat frame ){
 
                 cv::UMat frame_gray,frame2;
@@ -83,6 +84,8 @@ class detect
             }
 
     };
+
+//class that identifies the bounding boxes of the object and publishes for nodes in depth_cal to extract coordinate data
 class publishBox{
 
   public:
@@ -133,6 +136,8 @@ class publishBox{
     }
 
 };
+
+//Class to handle image messages that arrive in ROS for opencv to process on
 class ImageConverter
    {
      ros::NodeHandle nh_;
@@ -165,6 +170,7 @@ class ImageConverter
      {
        cv::TickMeter tm;
        tm.start();
+       //allows for conversion to Mat object
        cv_bridge::CvImagePtr cv_ptr;
        try
        {

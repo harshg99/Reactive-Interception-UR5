@@ -1,5 +1,9 @@
+
+<!-- Launch File to launch the relvant nodes required for detecting the object and predicting interception point for the robot to move to-->
+
 <launch>
     <node name="image" pkg="disp_cv" type="image" output="screen"/>
     <node name="calc_depth" pkg="disp_cv" type="calc_depth" output="screen"/>
     <node name="traj" pkg="disp_cv" type="traj" output="screen"/>
+    <node name="traj_tcp_server" pkg="disp_cv" type="traj_tcp_server" output="screen"/>
 </launch>

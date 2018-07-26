@@ -19,14 +19,14 @@
 
 #define time_interval_reg 0.02
 #define dataSize 3
-#define tolerance 0.025
+#define tolerance 0.012
 #define AXIS_X 1
 #define AXIS_Y 2
 #define AXIS_Z 3
 #define grav -4.90
 #define DEG 2
 #define TIME_INTER 1.3
-#define INTERCEPT 0.2
+#define INTERCEPT 0.3
 
 //Evaluates the trajectory and caluclated interception point between robot and object
 
@@ -218,7 +218,7 @@ class regression
 
       bool flag=false;
       ROS_INFO("Reference Time: %lf",t(ref,1));
-      for(int j=1;j<=20;j++)
+      for(int j=1;j<=10;j++)
       {
         geometry_msgs::Point p;
         //ROS_INFO("Reference at: %d",ref);
@@ -281,10 +281,18 @@ class regression
       if(!isZ){
 
             marker.text="No Interception: Trajectory Stopped along z";
+            geometry_msgs::Point p;
+            if(isX || isY){
+            p.x=refp.x;
+            p.y=refp.y;
+            p.z=INTERCEPT;
+            transform(p.x,p.y,p.z);
+            }
+           // marker2.points.push_back(p);
 
       }
       else{
-            //solving quadratically
+            //solving linearly
             double sol1,sol2;
             double det;
             det=coeffz(1,0)*coeffz(1,0)/*-4*coeffz(0,0)*coeffz(2,0)*/;
@@ -348,6 +356,8 @@ class regression
                 marker2.points.push_back(p);
                 pub.publish(marker2);
 
+                //sleeping for somw time
+
               }/*
               else if(sol2>t(ref,1)&&sol2<(t(ref,1)+TIME_INTER)){
                 pt=sol2;
@@ -379,21 +389,23 @@ class regression
         Matrix<double,4,1> vec;
         Matrix<double,4,1> trans_vec;
         vec<<x,y,z,1;
+
+        //transformation matrices
         roll<<1.0, 0.0, 0.0, 0.0,
-              0.0, 0.0,-1.0, 0.0,
-              0.0, 1.0, 0.0, 1.0,
+              0.0, 0.0, 1.0, 0.0,
+              0.0,-1.0, 0.0, 0.0,
               0.0, 0.0, 0.0, 1.0;
-        yaw<<1.0, 0.0, 0.0, 0.0,
-              0.0, 0.0,-1.0, 0.0,
-              0.0, 1.0, 0.0, 1.0,
+        yaw<< 0.0, 1.0, 0.0, 0.0,
+             -1.0, 0.0, 0.0, 0.0,
+              0.0, 0.0, 1.0, 0.0,
               0.0, 0.0, 0.0, 1.0;
-        trans<<1.0, 0.0, 0.0,0.2,
-              0.0, 1.0, 0.0,-0.4,
-              0.0, 0.0, 1.0,-0.2,
-              0.0, 0.0, 0.0, 1.0;
+        trans<<1.0, 0.0, 0.0, 0.2,
+               0.0, 1.0, 0.0,-0.4,
+               0.0, 0.0, 1.0,-0.2,
+               0.0, 0.0, 0.0, 1.0;
 
         try{
-        trans_vec=trans*roll*yaw*vec;
+        trans_vec=trans*yaw*roll*vec;
         std::cout<<trans_vec;
         }
         catch(std::exception &e){
@@ -407,12 +419,28 @@ class regression
         intercept_pos.x=trans_vec(0,0);
         intercept_pos.y=trans_vec(1,0);
         intercept_pos.z=trans_vec(2,0);
+        if(intercept_pos.y<-0.45){
+          intercept_pos.y=-0.45;
+        }
+        else if(intercept_pos.y>0.25){
+          intercept_pos.y=0.25;
+        }
+        if(intercept_pos.z<-0.18){
+          intercept_pos.z=-0.18;
+        }
+        else if(intercept_pos.z>0.5){
+          intercept_pos.z=0.5;
+        }
 
         intercept_pos.r1=0.0;
-        intercept_pos.r2=0.0;
+        intercept_pos.r2=1.57;
         intercept_pos.r3=0.0;
-
+        if(intercept_pos.z>=-0.3){
         inter_pub.publish(intercept_pos);
+        }
+        else{
+          return false;
+        }
         return true;
     }
 
