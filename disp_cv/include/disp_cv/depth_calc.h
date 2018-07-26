@@ -198,7 +198,7 @@ class depth{
     geometry_msgs::Point calc_dist(disp_cv::box box){
       geometry_msgs::Point p;
       p.x=0.0;p.y=0.0;p.z=0.0;
-     int max=20;
+     int max=15;
       std::queue<std::pair<int,int> > dfs_queue;
 
       std::pair<int,int> point;
@@ -209,7 +209,7 @@ class depth{
 
       //standard dfs routine to find closest values of accuracy
 
-     while(!dfs_queue.empty()&& max>0 &&dfs_queue.size()<80){
+     while(!dfs_queue.empty()&& max>0 &&dfs_queue.size()<60){
         std::pair<int,int> popped=dfs_queue.front();
         dfs_queue.pop();
         pcl::PointXYZ eval=pointcloud.at(popped.first,popped.second);

@@ -7,6 +7,8 @@
 #include<disp_cv/reg_pos3Dtime.h>
 
 #define COUNT 3
+
+//node to accumulate, filter and channel out regression data to regression node
 class predict
 {
   private:

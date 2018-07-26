@@ -157,6 +157,8 @@ class ImageConverter
        publish=publishBox(nh_);
 
        cv::namedWindow(OPENCV_WINDOW);
+
+	//directory path to the cascade.xml
        object=detect("/home/guest/dataset/cascade/cascade.xml");
        //object=detect();
      }

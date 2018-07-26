@@ -19,7 +19,7 @@
 
 #define time_interval_reg 0.02
 #define dataSize 3
-#define tolerance 0.012
+#define tolerance 0.014
 #define AXIS_X 1
 #define AXIS_Y 2
 #define AXIS_Z 3
@@ -381,7 +381,7 @@ class regression
 
     }
 
-    //RPY along the Yaw is 90 Degree and Roll is 90 Degree clockwise 0.2,-0.4,-0.2 translation
+    //RPY along the Yaw is 90 Degree and Roll is 90 Degree clockwise 0.2,-0.4,-0.2 translation to transform position from camera frame to robot frame
       bool transform(double x, double y,double z){
         Matrix<double,4,4> roll;
         Matrix<double,4,4> trans;
